@@ -6,13 +6,18 @@ import SelceteStyle from "../ui/SelectStyle";
 import { formatCurrency } from "../utils/helpers";
 import { RootState } from "../Store/store";
 
+function isItemsSlice(obj: unknown): obj is { data: Data[] } {
+  return typeof obj === "object" && obj !== null && "data" in obj;
+}
+
 export default function Table() {
-  const items = useSelector((s: RootState) => s.items) as unknown as Data[];
+  const itemsSlice = useSelector((s: RootState) => s.items) as unknown;
+  const items = isItemsSlice(itemsSlice) ? itemsSlice.data : undefined;
   const dispatch = useDispatch();
-  const [sortedData, setSortedData] = useState<Data[]>(items as Data[]);
+  const [sortedData, setSortedData] = useState<Data[]>(items ?? []);
   const [sortBy, setSortBy] = useState<keyof Data>("date");
   const [isAsc, setIsAsc] = useState<boolean>(true);
-  const [actionFilter, setActionFilter] = useState<string>("");
+  const [actionFilter, setActionFilter] = useState<string>("all");
   const [income, setIncome] = useState<number>(0);
 
   const handlerClick = (id: string) => {
@@ -31,7 +36,6 @@ export default function Table() {
     let tmpIncome: number = 0;
     items.forEach((item: Data) => {
       if (item.sellorbuy === "buy") {
-        console.log(item.total, "buy");
         tmpIncome = tmpIncome + item.total;
       } else {
         tmpIncome = tmpIncome - item.total;
@@ -74,12 +78,11 @@ export default function Table() {
         <div>Filters</div>
         <SelceteStyle
           name="byaction"
+          value={actionFilter}
           onChange={(e) => handelActionFilter(e.target.value)}
           className="form-select"
         >
-          <option selected value="all">
-            All Actions
-          </option>
+          <option value="all">All Actions</option>
           <option value="sell">Sell</option>
           <option value="buy">Buy</option>
         </SelceteStyle>
@@ -123,29 +126,30 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((item, index: number) => (
-            <tr key={index} className={item.sellorbuy}>
-              <td scope="row" className="d-none d-lg-block">
-                {index + 1}
-              </td>
-              <td className="d-none d-lg-table-cell">{item.sellorbuy}</td>
-              <td>{item.name}</td>
-              <td className="d-none d-lg-table-cell">
-                {formatCurrency(item.price)}
-              </td>
-              <td className="d-none d-lg-table-cell">{item.quantity}</td>
-              <td>{formatCurrency(item.total)}</td>
-              <td>{item.date}</td>
-              <td>
-                <button
-                  className="btn btn-outline-danger py-0 px-1 py-md-1 px-md-2"
-                  onClick={() => handlerClick(item.id)}
-                >
-                  <i className="bi bi-trash" />
-                </button>
-              </td>
-            </tr>
-          ))}
+          {sortedData[0] &&
+            sortedData.map((item, index: number) => (
+              <tr key={index} className={item.sellorbuy}>
+                <td scope="row" className="d-none d-lg-table-cell">
+                  {index + 1}
+                </td>
+                <td className="d-none d-lg-table-cell">{item.sellorbuy}</td>
+                <td>{item.name}</td>
+                <td className="d-none d-lg-table-cell">
+                  {formatCurrency(item.price)}
+                </td>
+                <td className="d-none d-lg-table-cell">{item.quantity}</td>
+                <td>{formatCurrency(item.total)}</td>
+                <td>{item.date}</td>
+                <td>
+                  <button
+                    className="btn btn-outline-danger py-0 px-1 py-md-1 px-md-2"
+                    onClick={() => handlerClick(item.id)}
+                  >
+                    <i className="bi bi-trash" />
+                  </button>
+                </td>
+              </tr>
+            ))}
           <tr>
             <td colSpan={2}>Income:</td>
             <td colSpan={6}>{formatCurrency(income)}</td>
