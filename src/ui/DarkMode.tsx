@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { toggleDarkmode } from "../Store/darkmode/darkmodSlice";
 import { useEffect } from "react";
+import { RootState } from "../Store/store";
 
 const UiSwitch = styled.label`
   /* switch */
@@ -88,7 +89,7 @@ const Slider = styled.div`
 `;
 
 export default function DarkMode() {
-  const isDarkmode = useSelector((s) => s.darkmode.darkmode);
+  const isDarkmode = useSelector((s: RootState) => s.darkmode.darkmode);
   const dispatch = useDispatch();
 
   const handlerChange = () => {

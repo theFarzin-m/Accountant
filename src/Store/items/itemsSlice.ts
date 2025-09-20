@@ -1,6 +1,6 @@
 import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
 
-interface Data {
+export interface Data {
   id: string;
   sellorbuy: string;
   name: string;

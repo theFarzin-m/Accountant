@@ -1,14 +1,21 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import Input from "../ui/Input";
 import { useDispatch } from "react-redux";
 import { addItem } from "../Store/items/itemsSlice";
 import SelceteStyle from "../ui/SelectStyle";
 
 export default function Form() {
-  const { register, formState, handleSubmit, reset } = useForm();
+  interface FormValues {
+    name: string;
+    sellorbuy: "buy" | "sell";
+    price: number;
+    quantity: number;
+  }
+
+  const { register, handleSubmit, reset } = useForm<FormValues>();
   const dispatch = useDispatch();
 
-  const handeleOnSubmit = (data) => {
+  const handeleOnSubmit: SubmitHandler<FormValues> = (data) => {
     const { name, sellorbuy, price, quantity } = data;
 
     const now = new Date();
@@ -28,7 +35,7 @@ export default function Form() {
     reset();
   };
 
-  const handelError = (err) => {
+  const handelError = (err: unknown): void => {
     console.log(err);
   };
 

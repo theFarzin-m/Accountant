@@ -1,9 +1,5 @@
 import styled from "styled-components";
 
-interface InputeProps {
-  label: string;
-  type: string;
-}
 
 const Style = styled.label`
   & input {
@@ -17,7 +13,12 @@ const Style = styled.label`
   }
 `;
 
-export default function Input({ children, label }) {
+interface InputPropsType {
+  children: React.ReactNode;
+  label: string;
+}
+
+export default function Input({ children, label }: InputPropsType) {
   return (
     <Style className=" w-100">
       <div>{label}</div>

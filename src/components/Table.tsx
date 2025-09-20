@@ -1,35 +1,35 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem, sortData } from "../Store/items/itemsSlice";
+import { removeItem } from "../Store/items/itemsSlice";
+import { Data } from "../Store/items/itemsSlice"; // Assuming 'Item' is the correct type for a single item
 import { useEffect, useState } from "react";
 import SelceteStyle from "../ui/SelectStyle";
 import { formatCurrency } from "../utils/helpers";
+import { RootState } from "../Store/store";
 
 export default function Table() {
-  const items = useSelector((s) => s.items);
-  const data = items.data;
+  const items = useSelector((s: RootState) => s.items) as unknown as Data[];
   const dispatch = useDispatch();
-  const [sortedData, setSortedData] = useState(data);
-  const [sortBy, setSortBy] = useState("date");
-  const [isAsc, setIsAsc] = useState(true);
-  const [actionFilter, setActionFilter] = useState("");
-  const [income, setIncome] = useState(0);
+  const [sortedData, setSortedData] = useState<Data[]>(items as Data[]);
+  const [sortBy, setSortBy] = useState<keyof Data>("date");
+  const [isAsc, setIsAsc] = useState<boolean>(true);
+  const [actionFilter, setActionFilter] = useState<string>("");
+  const [income, setIncome] = useState<number>(0);
 
-  const handlerClick = (id) => {
+  const handlerClick = (id: string) => {
     dispatch(removeItem(id));
   };
 
-  const handelsort = (column: string) => {
+  const handelsort = (column: keyof Data) => {
     setSortBy(column);
     setIsAsc(() => !isAsc);
   };
 
-  const handelActionFilter = (value) => {
+  const handelActionFilter = (value: string) => {
     setActionFilter(value);
   };
-
-  const calcuteIncom = (items) => {
-    let tmpIncome = 0;
-    items.forEach((item) => {
+  const calcuteIncom = (items: Data[]) => {
+    let tmpIncome: number = 0;
+    items.forEach((item: Data) => {
       if (item.sellorbuy === "buy") {
         console.log(item.total, "buy");
         tmpIncome = tmpIncome + item.total;
@@ -41,9 +41,8 @@ export default function Table() {
   };
 
   useEffect(() => {
-    if (!data) return;
-
-    let sorted = [...data].sort((a, b) => {
+    if (!items) return;
+    let sorted: Data[] = [...items].sort((a: Data, b: Data) => {
       const valA = a[sortBy];
       const valB = b[sortBy];
 
@@ -62,12 +61,12 @@ export default function Table() {
 
     if (actionFilter !== "") {
       if (actionFilter !== "all") {
-        sorted = sorted.filter((i: Item) => i.sellorbuy === actionFilter);
+        sorted = sorted.filter((i) => i.sellorbuy === actionFilter);
       }
     }
     setSortedData(sorted);
     calcuteIncom(sorted);
-  }, [data, sortBy, isAsc, actionFilter]);
+  }, [items, sortBy, isAsc, actionFilter]);
 
   return (
     <>
@@ -124,7 +123,7 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((item, index) => (
+          {sortedData.map((item, index: number) => (
             <tr key={index} className={item.sellorbuy}>
               <td scope="row" className="d-none d-lg-block">
                 {index + 1}
