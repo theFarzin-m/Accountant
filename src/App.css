@@ -1,0 +1,58 @@
+:root {
+  --c-p: #2e270f;
+  --c-s: #c1a23e;
+  --bg-p: #f0ead6;
+  --bg-s: #f8f5ec;
+  --box-shadow: #d3c188;
+  --border-color: #555555;
+  --sell-bg: #ffc6c6;
+  --buy-bg: #c6ffc6;
+  .dark {
+    --c-p: #f0ead6;
+    --c-s: #c1a23e;
+    --bg-p: #514f49;
+    --bg-s: #535350;
+    --box-shadow: #494332;
+    --border-color: #aaaaaa;
+    --sell-bg: #613838;
+    --buy-bg: #386138;
+  }
+}
+
+* {
+  transition: all 0.5s;
+}
+
+body {
+  background-color: var(--bg-p);
+  align-items: center;
+  padding: 10px 0;
+}
+
+@media screen and (min-width: 748px) {
+  .body {
+    padding: 48px;
+  }
+  .card {
+    padding: 48px !important;
+  }
+}
+.card {
+  background-color: var(--bg-s);
+  box-shadow: 3px 0px 10px var(--box-shadow);
+  color: var(--c-p) !important;
+  padding: 12px !important;
+}
+
+.table th,
+.table td {
+  background-color: var(--bg-s);
+  color: var(--c-p);
+}
+
+.sell > * {
+  background-color: var(--sell-bg) !important;
+}
+.buy > * {
+  background-color: var(--buy-bg) !important;
+}
